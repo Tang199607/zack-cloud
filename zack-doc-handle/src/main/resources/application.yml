@@ -7,28 +7,28 @@ spring:
     # 应用名，必填，用于注册nacos
     name: zack-doc
   profiles:
-    active: dev
-  cloud:
-    nacos:
-      config:
-        # 启用nacos配置管理
-        enabled: true
-        # 配置中心地址
-        server-addr: 124.70.71.131:8848
-        # 所属命名空间id，用于区分开发、测试、生产
-        namespace: bafb146f-dfd8-4ae0-a94e-f4dbf134b359
-        # 配置文件类型
-        file-extension: yml
-  config:
-    # 因为springboot 2.4版本以后默认关闭加载bootstrap.yml，所以只能通过此方式连接到nacos config
-    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-  servlet:
-    multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
-  sql:
-    init:
-      platform: mysql
+    active: pro
+#  cloud:
+#    nacos:
+#      config:
+#        # 启用nacos配置管理
+#        enabled: true
+#        # 配置中心地址
+#        server-addr: 124.70.71.131:8848
+#        # 所属命名空间id，用于区分开发、测试、生产
+#        namespace: bafb146f-dfd8-4ae0-a94e-f4dbf134b359
+#        # 配置文件类型
+#        file-extension: yml
+#  config:
+#    # 因为springboot 2.4版本以后默认关闭加载bootstrap.yml，所以只能通过此方式连接到nacos config
+#    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+#  servlet:
+#    multipart:
+#      max-file-size: 500MB
+#      max-request-size: 500MB
+#  sql:
+#    init:
+#      platform: mysql
 
   datasource:
     ########## 连接池 配置 ##########
@@ -91,3 +91,7 @@ spring:
         deny:             # 拒绝访问的地址，deny优先于allow，如果在deny列表中，就算在allow列表中，也会被拒绝
       break-after-acquire-failure: true
       connection-error-retry-attempts: 0
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB

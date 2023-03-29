@@ -1,6 +1,7 @@
 package com.tangyong.service.impl;
 
 
+import com.alibaba.spring.util.ObjectUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tangyong.config.DruidDataSourceWrapper;
@@ -50,27 +51,50 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
             connection.setAutoCommit(false);
             /*String insertSql =
                     "insert into inventory (sku, box, sn, qty, uom, loc, lot01, lot04) values (?,?,?,?,?,?,?,?)";*/
-            String insertSql =
-                    "insert into C_RECEIPTDETAIL_TEST (sku, box, sn, qty, uom, loc, lot01, lot04) values (?,?,?,?,?,?,?,?)";
+            String insertSql = "insert into C_RECEIPTDETAIL " +
+                    "(sku, lpn, sn, qty, uom, loc, lot01, lot02, lot03, lot04, lot05, lot06, lot07, lot08, lot09, lot10, packkey) " +
+                    "values (?, ?, ?, ?, ?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd hh24:mi:ss'), ?, ?, ?, ?, ?, ?, ?)";
             ps = connection.prepareStatement(insertSql);
             for (Inventory inventory : cachedDataList) {
                 String sku = inventory.getSku();
-                String box = inventory.getBox();
+                String lpn = inventory.getLpn();
                 String sn = inventory.getSn();
                 Double qty = inventory.getQty();
                 String uom = inventory.getUom();
                 String loc = inventory.getLoc();
                 String lot01 = inventory.getLot01();
+                String lot02 = inventory.getLot02();
+                String lot03 = inventory.getLot03();
+                String lot04 = "";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_PATTERN);
-                Date lot04 = inventory.getLot04();
+                if (inventory.getLot04() != null) {
+                    lot04 = simpleDateFormat.format(inventory.getLot04());
+                }
+                String lot05 = inventory.getLot05();
+                String lot06 = inventory.getLot06();
+                String lot07 = inventory.getLot07();
+                String lot08 = inventory.getLot08();
+                String lot09 = inventory.getLot09();
+                String lot10 = inventory.getLot10();
+                String pack = inventory.getPackkey();
+
                 ps.setString(1, sku);
-                ps.setString(2, box);
+                ps.setString(2, lpn);
                 ps.setString(3, sn);
                 ps.setDouble(4, qty);
                 ps.setString(5, uom);
                 ps.setString(6, loc);
                 ps.setString(7, lot01);
-                ps.setString(8, simpleDateFormat.format(lot04));
+                ps.setString(8, lot02);
+                ps.setString(9, lot03);
+                ps.setString(10, lot04);
+                ps.setString(11, lot05);
+                ps.setString(12, lot06);
+                ps.setString(13, lot07);
+                ps.setString(14, lot08);
+                ps.setString(15, lot09);
+                ps.setString(16, lot10);
+                ps.setString(17, pack);
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -92,7 +116,7 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
     @Override
     public List<Inventory> listInventory() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getSerialkey, 1);
+        queryWrapper.eq(Inventory::getSerialkey, 183);
         return this.list(queryWrapper);
     }
 }

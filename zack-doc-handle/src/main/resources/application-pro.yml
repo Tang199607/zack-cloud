@@ -1,9 +1,12 @@
-########## 配置数据源 （Druid）##########
 spring:
   datasource:
     ########## JDBC 基本配置 ##########
-    username: zack
-    password: tangyong
-    driver-class-name: com.mysql.cj.jdbc.Driver   # mysql8 的连接驱动
-    url: jdbc:mysql://1241.70.71.131:3306/zack?serverTimezone=UTC&useSSL=false
-    type: com.alibaba.druid.pool.DruidDataSource  # 指定数据源类型
+    username: wmwhse1
+    password: WMwhSqlWMwhSql1
+    #    username: zack
+    #    password: tangyong
+    #    driver-class-name: com.mysql.cj.jdbc.Driver   # mysql8 的连接驱动
+    #    url: jdbc:mysql://124.70.71.131:3306/zack?serverTimezone=UTC&useSSL=false
+    driver-class-name: oracle.jdbc.OracleDriver   # oracle 的连接驱动
+    url: jdbc:oracle:thin:@172.16.8.156:1521:scprd
+    type: com.alibaba.druid.pool.DruidDataSource 
