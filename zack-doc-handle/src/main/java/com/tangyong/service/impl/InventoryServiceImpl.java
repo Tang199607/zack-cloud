@@ -1,7 +1,7 @@
 package com.tangyong.service.impl;
 
 
-import com.alibaba.spring.util.ObjectUtils;
+import com.alibaba.druid.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tangyong.config.DruidDataSourceWrapper;
@@ -15,10 +15,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,52 +47,61 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
             connection = dataSourceWrapper.getConnection();
             // 设置为默认不提交
             connection.setAutoCommit(false);
-            /*String insertSql =
-                    "insert into inventory (sku, box, sn, qty, uom, loc, lot01, lot04) values (?,?,?,?,?,?,?,?)";*/
-            String insertSql = "insert into C_RECEIPTDETAIL " +
-                    "(sku, lpn, sn, qty, uom, loc, lot01, lot02, lot03, lot04, lot05, lot06, lot07, lot08, lot09, lot10, packkey) " +
-                    "values (?, ?, ?, ?, ?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd hh24:mi:ss'), ?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "insert into YT_RELATION_ASN_20230401 " +
+                    "(storerkey, pokey, polinenumber, externreceiptkey, externlineno, supplier, box, sn, sku, plan_qty, SNSOURCE, pclotno) " +
+                    "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ' ', ' ')";
             ps = connection.prepareStatement(insertSql);
             for (Inventory inventory : cachedDataList) {
-                String sku = inventory.getSku();
-                String lpn = inventory.getLpn();
-                String sn = inventory.getSn();
-                Double qty = inventory.getQty();
-                String uom = inventory.getUom();
-                String loc = inventory.getLoc();
-                String lot01 = inventory.getLot01();
-                String lot02 = inventory.getLot02();
-                String lot03 = inventory.getLot03();
-                String lot04 = "";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_PATTERN);
-                if (inventory.getLot04() != null) {
-                    lot04 = simpleDateFormat.format(inventory.getLot04());
+                String storerkey = getString(inventory);
+                String pokey = inventory.getPokey();
+                String polinenumber = inventory.getPolinenumber();
+                Double planQty = inventory.getPlan_qty();
+                String externreceiptkey = inventory.getExternreceiptkey();
+                String externlineno = inventory.getExternlineno();
+                String supplier = inventory.getSupplier();
+                if (StringUtils.isEmpty(pokey)) {
+                    pokey = " ";
                 }
-                String lot05 = inventory.getLot05();
-                String lot06 = inventory.getLot06();
-                String lot07 = inventory.getLot07();
-                String lot08 = inventory.getLot08();
-                String lot09 = inventory.getLot09();
-                String lot10 = inventory.getLot10();
-                String pack = inventory.getPackkey();
-
-                ps.setString(1, sku);
-                ps.setString(2, lpn);
-                ps.setString(3, sn);
-                ps.setDouble(4, qty);
-                ps.setString(5, uom);
-                ps.setString(6, loc);
-                ps.setString(7, lot01);
-                ps.setString(8, lot02);
-                ps.setString(9, lot03);
-                ps.setString(10, lot04);
-                ps.setString(11, lot05);
-                ps.setString(12, lot06);
-                ps.setString(13, lot07);
-                ps.setString(14, lot08);
-                ps.setString(15, lot09);
-                ps.setString(16, lot10);
-                ps.setString(17, pack);
+                if (StringUtils.isEmpty(storerkey)) {
+                    storerkey = "3000";
+                }
+                if (StringUtils.isEmpty(polinenumber)) {
+                    polinenumber = " ";
+                }
+                if (planQty == null) {
+                    planQty = 0.00;
+                }
+                if (StringUtils.isEmpty(externreceiptkey)) {
+                    externreceiptkey = " ";
+                }
+                if (StringUtils.isEmpty(externlineno)) {
+                    externlineno = " ";
+                }
+                if (StringUtils.isEmpty(supplier)) {
+                    supplier = " ";
+                }
+                String box = inventory.getBox();
+                if (StringUtils.isEmpty(box)) {
+                    box = " ";
+                }
+                String sn = inventory.getSn();
+                if (StringUtils.isEmpty(sn)) {
+                    sn = " ";
+                }
+                String sku = inventory.getSku();
+                if (StringUtils.isEmpty(sku)) {
+                    sku = " ";
+                }
+                ps.setString(1, storerkey);
+                ps.setString(2, pokey);
+                ps.setString(3, polinenumber);
+                ps.setString(4, externreceiptkey);
+                ps.setString(5, externlineno);
+                ps.setString(6, supplier);
+                ps.setString(7, box);
+                ps.setString(8, sn);
+                ps.setString(9, sku);
+                ps.setDouble(10, planQty);
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -111,6 +118,11 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
             JDBCDruidUtils.close(ps, connection);
         }
         return result;
+    }
+
+    private static String getString(Inventory inventory) {
+        String storerkey = inventory.getStorerkey();
+        return storerkey;
     }
 
     @Override

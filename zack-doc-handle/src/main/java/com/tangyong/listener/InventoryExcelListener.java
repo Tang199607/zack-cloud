@@ -18,7 +18,7 @@ import java.util.Map;
 public class InventoryExcelListener extends AnalysisEventListener<Inventory> {
 
     // 超过5w可能会内存溢出
-    public static final int BATCH_COUNT = 30000;
+    public static final int BATCH_COUNT = 50000;
     private List<Inventory> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     private InventoryService inventoryService;
 

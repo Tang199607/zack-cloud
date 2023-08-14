@@ -27,10 +27,11 @@
         <nacos-config.version>2021.0.1.0</nacos-config.version>
         <easyexcel.version>3.1.4</easyexcel.version>
         <starter-bootstrap.version>3.1.0</starter-bootstrap.version>
-        <druid.version>1.2.9</druid.version>
+        <druid.version>1.2.15</druid.version>
         <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <mysql.version>8.0.31</mysql.version>
         <oracle.version>19.3.0.0</oracle.version>
+        <hutool.version>5.8.16</hutool.version>
     </properties>
 
     <dependencyManagement>
@@ -99,6 +100,14 @@
                 <groupId>com.oracle.database.jdbc</groupId>
                 <artifactId>ojdbc8</artifactId>
                 <version>${oracle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <!-- 注意这里是import -->
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
